@@ -238,3 +238,5 @@ if search_button2:
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
         st.pyplot(fig)
+
+show_google_map(place_id, api_key)
