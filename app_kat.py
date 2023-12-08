@@ -34,14 +34,35 @@ def show_google_map(place_id, api_key):
 st.markdown("""<h1 style='color: #FF6347;'>RateMate</h1>""", unsafe_allow_html=True)
 
 
-st.markdown("""<p style='color: #6B8E23;'> Get your personal rating for the restaurant of your choice</p>"""
-            , unsafe_allow_html=True)
-st.markdown(""" """,
-            unsafe_allow_html=True)
+# st.markdown("""<p style='color: #6B8E23;'> Get your personal rating for the restaurant of your choice</p>"""
+#             , unsafe_allow_html=True)
+# st.markdown(""" """,
+#             unsafe_allow_html=True)
 
 
 
 gmaps = googlemaps.Client(key=api_key)
+
+st.markdown("""<h1 style='color: #6B8E23;'>1. </h1>""", unsafe_allow_html=True)
+
+dash1= st.container()
+
+with dash1:
+    col1, col2, col3, col4, col5 = st.columns(5)
+    with col1:
+        st.markdown("<h4 style='text-align: center; color: grey ;'>Specify your preferences</h4>", unsafe_allow_html=True)
+
+    with col5:
+        price_review_weightage = st.slider("PRICE", 0.0, 1.0, 0.5)
+
+    with col2:
+        food_review_weightage = st.slider("FOOD", 0.0, 1.0, 0.5)
+
+    with col3:
+        service_review_weightage = st.slider("SERVICE", 0.0, 1.0, 0.5)
+
+    with col4:
+        ambience_review_weightage = st.slider("AMBIENCE", 0.0, 1.0, 0.5)
 
 
 @st.cache_data(ttl=500)
@@ -70,7 +91,7 @@ def results_for_restorant(restaurant_name, search_button):
         if restaurant:
             results.append(f" {restaurant['name']}")
             results.append(f"Address: {restaurant['formatted_address']}")
-            results.append(f"Rating: {restaurant.get('rating', 'No rating')}")
+            results.append(f"Google rating: {restaurant.get('rating', 'No rating')}")
             place_id = restaurant['place_id']
             google_maps_url = f"https://www.google.com/maps/place/?q=place_id:{place_id}"
             url = google_maps_url
@@ -80,7 +101,9 @@ def results_for_restorant(restaurant_name, search_button):
             results.append("No restaurant found")
     return url, results, place_id
 
-restaurant_name = st.text_input("Hello friend, please enter the name of the restaurant you are interested in:", "Type here")
+st.markdown("""<h1 style='color: #6B8E23;'>2. </h1>""", unsafe_allow_html=True)
+
+restaurant_name = st.text_input("Enter restaurant`s:", "Restaurant")
 search_button = st.button("Find")
 
 
@@ -95,34 +118,9 @@ st.markdown(
 )
 
 
+# local_guides_review_weightage = st.checkbox('Review only from local guides')
 
-# empty = st.container()
-# empty.write(url)
-# empty.write()
-
-
-# empty2 = st.container()
-dash1= st.container()
-
-local_guides_review_weightage = st.checkbox('Review only from local guides')
-
-with dash1:
-    col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        st.markdown("<h4 style='text-align: center; color: #FF6347 ;'>Specify your preferences</h4>", unsafe_allow_html=True)
-
-    with col5:
-        price_review_weightage = st.slider("PRICE", 0.0, 1.0, 0.25)
-
-    with col2:
-        food_review_weightage = st.slider("FOOD", 0.0, 1.0, 0.25)
-
-    with col3:
-        service_review_weightage = st.slider("SERVICE", 0.0, 1.0, 0.25)
-
-    with col4:
-        ambience_review_weightage = st.slider("AMBIENCE", 0.0, 1.0, 0.25)
-
+st.markdown("""<h1 style='color: #6B8E23;'>3. </h1>""", unsafe_allow_html=True)
 
 search_button2 = st.button("Get Score")
 
@@ -130,16 +128,21 @@ search_button2 = st.button("Get Score")
 # the selected value is returned by st.slider
 # checkbox for local guides
 if search_button2:
+    st.snow()
     st.markdown('✅ Great, <u>**this restaurant**</u> has been chosen:', unsafe_allow_html=True)
     st.session_state.is_enter_pressed = False
 
     restaurant_name = find_restaurant(restaurant_name)
     url, results, place_id = results_for_restorant(restaurant_name['name'], search_button2)
-    for result in results:
-        st.write(f"**{result}**")
+    st.markdown(f"<h1 style='color: grey;'>{results[0]}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color: grey;'>{results[1]}</p>", unsafe_allow_html=True)
+
+    st.markdown(f"<h2 style='color: grey;'>{results[2]}</h2>", unsafe_allow_html=True)
+
+
     with st.spinner('😎 Please wait for it...'):
 
-        st.markdown("<h4 style='text-align: center; color: #6B8E23;'>PREDICTING</h4>", unsafe_allow_html=True)
+        # st.markdown("<h4 style='text-align: center; color: #6B8E23;'>PREDICTING</h4>", unsafe_allow_html=True)
 
         params = {
             'url': url,
@@ -147,17 +150,13 @@ if search_button2:
             'food_review_weightage': food_review_weightage,
             'service_review_weightage': service_review_weightage,
             'ambience_review_weightage': ambience_review_weightage,
-            'local_guides_review_weightage': local_guides_review_weightage
+            #'local_guides_review_weightage': local_guides_review_weightage
         }
 
-        # ratemate_api_url = 'https://ratemate-z2kqlvo2ta-ew.a.run.app/personal_score'
-        # response = requests.get(ratemate_api_url, params=params)
-        # #st.write(url)
-        # if response.status_code == 200:
         ratemate_api_url = 'https://ratemate-z2kqlvo2ta-ew.a.run.app/personal_score'
         response = requests.get(ratemate_api_url, params=params)
 
-
+        # original_score = response.json()
         your_personal_score = response.json()["personal_score"]
         top_1_review = response.json()["top_1"]
         top_2_review = response.json()["top_2"]
@@ -173,34 +172,27 @@ if search_button2:
         dist_food = response.json()["dist_food"]
 
         st.divider()
-        st.success("Prediction Complete!")
-        st.header(f'⭐️ Your personal score is: {your_personal_score} ⭐️')
 
-        st.markdown("""
-        <details>
-        <summary>TOP REVIEWS</summary>
-        <ul>
-            <li>Top 1</li>
-            <li>Top 2</li>
-            <li>Top 3</li>
-        </ul>
-        </details>
-        """, unsafe_allow_html=True)
-        with st.expander("TOP REVIEWS"):
+        #st.success("Prediction Complete!")
+        #st.markdown("""<h1 style='color: #6B8E23;'>4. </h1>""", unsafe_allow_html=True)
 
-            st.markdown(f"<h6 style='color: grey;'>Top 1:</h6> {top_1_review}", unsafe_allow_html=True)
-            st.markdown(f"<h6 style='color: grey;'>Top 2:</h6> {top_2_review}", unsafe_allow_html=True)
-            st.markdown(f"<h6 style='color: grey;'>Top 3:</h6> {top_3_review}", unsafe_allow_html=True)
+        st.markdown(f"<h1 style='color: #6B8E23;'>⭐️ Your personal score is: {your_personal_score} ⭐️</h1>", unsafe_allow_html=True)
+
+        # with st.expander("TOP REVIEWS"):
+
+        #     st.markdown(f"<h6 style='color: grey;'>Top 1:</h6> {top_1_review}", unsafe_allow_html=True)
+        #     st.markdown(f"<h6 style='color: grey;'>Top 2:</h6> {top_2_review}", unsafe_allow_html=True)
+        #     st.markdown(f"<h6 style='color: grey;'>Top 3:</h6> {top_3_review}", unsafe_allow_html=True)
 
         dash2= st.container()
         with dash2:
             col1, col2 = st.columns(2)
             with col1:
-                st.markdown("<h3 style='text-align: center; color: #6B8E23;'>Sub ratings:</h3>", unsafe_allow_html=True)
+                st.markdown("<h3 style='text-align: center; color: grey;'>Sub ratings:</h3>", unsafe_allow_html=True)
 
 
                 categories = ['price', 'service', 'atmosphere', 'food']
-                values = [2, 3, 5, 4]
+                values = [sub_price, sub_service, sub_atmosphere, sub_food]
 
                 fig, ax = plt.subplots()
                 fig.patch.set_alpha(0)
@@ -209,26 +201,37 @@ if search_button2:
 
                 ax.spines['top'].set_visible(False)
                 ax.spines['right'].set_visible(False)
-                ax.set_xlabel('Categories')
-                ax.set_ylabel('Values')
+                ax.set_ylim(3, 5)
 
                 st.pyplot(fig)
 
             with col2:
 
 
-                st.markdown("<h3 style='text-align: center; color: #6B8E23;'>Topic distributions:</h3>", unsafe_allow_html=True)
+                st.markdown("<h3 style='text-align: center; color: grey;'>Most topics:</h3>", unsafe_allow_html=True)
 
                 labels = ['price', 'service', 'atmosphere', 'food']
                 colors = ['#FFD700', '#FF4500', '#C0C0C0', '#228B22']
-                sizes = [0.15, 0.30, 0.45, 0.10]
+                sizes = [dist_price, dist_service, dist_atmosphere, dist_food]
                 fig1, ax1 = plt.subplots()
                 ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=70, textprops={'fontsize': 6})
 
-                ax1.axis('equal')  # Сделать диаграмму круговой, а не эллиптической
+                ax1.axis('equal')
                 fig1.set_size_inches(2, 2)
                 fig1.patch.set_alpha(0)
                 st.pyplot(fig1)
+
+        st.markdown(f"""
+        <details>
+        <summary>TOP REVIEWS</summary>
+        <ul>
+            <li>Top 1: {top_1_review}</li>
+            <li>Top 2: {top_2_review}</li>
+            <li>Top 3: {top_3_review}</li>
+        </ul>
+        </details>
+        """, unsafe_allow_html=True)
+
 
         wordcloud = WordCloud(max_words=10000, min_font_size=10, height=800, width=1600,
                 background_color="white", colormap="viridis").generate(wordcloud_input)
@@ -238,5 +241,6 @@ if search_button2:
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
         st.pyplot(fig)
+
 
 show_google_map(place_id, api_key)
