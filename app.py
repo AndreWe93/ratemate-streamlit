@@ -239,6 +239,9 @@ if search_button2:
                 """, unsafe_allow_html=True)
 
 
+        st.markdown("")
+        st.markdown("")
+
         wordcloud = WordCloud(max_words=10000, min_font_size=10, height=800, width=1600,
                 background_color="white", colormap="viridis").generate(wordcloud_input)
 
