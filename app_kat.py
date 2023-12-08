@@ -25,10 +25,12 @@ st.markdown(page_element, unsafe_allow_html=True)
 
 
 
-def show_google_map(place_id, api_key):
-    url = f"https://www.google.com/maps/embed/v1/place?key={api_key}&q=place_id:{place_id}"
-    st.markdown(f'<iframe width="700" height="450" frameborder="0" style="border:0" src="{url}" allowfullscreen></iframe>', unsafe_allow_html=True)
-
+def show_google_map(place_id=None, api_key=None):
+    if place_id and api_key:
+        url = f"https://www.google.com/maps/embed/v1/place?key={api_key}&q=place_id:{place_id}&zoom=15"
+        st.markdown(f'<iframe width="700" height="450" frameborder="0" style="border:0" src="{url}" allowfullscreen></iframe>', unsafe_allow_html=True)
+    else:
+        st.write("")
 
 
 st.markdown("""<h1 style='color: #FF6347;'>RateMate</h1>""", unsafe_allow_html=True)
@@ -103,7 +105,7 @@ def results_for_restorant(restaurant_name, search_button):
 
 st.markdown("""<h1 style='color: #6B8E23;'>2. </h1>""", unsafe_allow_html=True)
 
-restaurant_name = st.text_input("Enter restaurant`s:", "Restaurant")
+restaurant_name = st.text_input("Enter restaurant:", "Restaurant")
 search_button = st.button("Find")
 
 
