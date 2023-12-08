@@ -25,9 +25,12 @@ st.markdown(page_element, unsafe_allow_html=True)
 
 
 
-def show_google_map(place_id, api_key):
-    url = f"https://www.google.com/maps/embed/v1/place?key={api_key}&q=place_id:{place_id}"
-    st.markdown(f'<iframe width="700" height="450" frameborder="0" style="border:0" src="{url}" allowfullscreen></iframe>', unsafe_allow_html=True)
+def show_google_map(place_id=None, api_key=None):
+    if place_id and api_key:
+        url = f"https://www.google.com/maps/embed/v1/place?key={api_key}&q=place_id:{place_id}&zoom=15"
+        st.markdown(f'<iframe width="700" height="450" frameborder="0" style="border:0" src="{url}" allowfullscreen></iframe>', unsafe_allow_html=True)
+    else:
+        st.write("")
 
 
 
