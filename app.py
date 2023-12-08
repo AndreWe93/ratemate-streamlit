@@ -105,8 +105,8 @@ def results_for_restorant(restaurant_name, search_button):
     return url, results, place_id
 
 st.markdown("""<h1 style='color: #6B8E23;'>2. </h1>""", unsafe_allow_html=True)
-
-restaurant_name = st.text_input("Enter restaurant:", "Restaurant")
+st.markdown("<h4 style=' margin-bottom: -45px; color: grey ;'>Enter restaurant:</h4>", unsafe_allow_html=True)
+restaurant_name = st.text_input("", "Restaurant")
 search_button = st.button("Find")
 
 
@@ -194,7 +194,7 @@ if search_button2:
                 st.markdown("<h3 style='text-align: center; color: grey;'>Sub ratings:</h3>", unsafe_allow_html=True)
 
 
-                categories = ['price', 'service', 'atmosphere', 'food']
+                categories = ['price', 'service', 'ambience', 'food']
                 values = [sub_price, sub_service, sub_atmosphere, sub_food]
 
                 fig, ax = plt.subplots()
@@ -213,7 +213,7 @@ if search_button2:
 
                 st.markdown("<h3 style='text-align: center; color: grey;'>Topic relevance:</h3>", unsafe_allow_html=True)
 
-                labels = ['price', 'service', 'atmosphere', 'food']
+                labels = ['price', 'service', 'ambience', 'food']
                 colors = ['#FFD700', '#FF4500', '#C0C0C0', '#228B22']
                 sizes = [dist_price, dist_service, dist_atmosphere, dist_food]
                 fig1, ax1 = plt.subplots()
@@ -225,15 +225,18 @@ if search_button2:
                 st.pyplot(fig1)
 
         st.markdown(f"""
-        <details>
-        <summary>TOP REVIEWS</summary>
-        <ul>
-            <li>Top 1: {top_1_review}</li>
-            <li>Top 2: {top_2_review}</li>
-            <li>Top 3: {top_3_review}</li>
-        </ul>
-        </details>
-        """, unsafe_allow_html=True)
+                <details>
+                <summary style='color: #6B8E23; font-size: 24px; font-weight: bold;'>TOP REVIEWS</summary>
+                <ul style='list-style-type: none; padding-left: 20px;'>
+                    <p>&nbsp;</p>
+                    <li><span style='color: #6B8E23;font-weight: bold; font-size: 18px;'>• Top 1: </span>{top_1_review}</li>
+                    <p>&nbsp;</p>
+                    <li><span style='color: #6B8E23;font-weight: bold; font-size: 18px;'>• Top 2: </span>{top_2_review}</li>
+                    <p>&nbsp;</p>
+                    <li><span style='color: #6B8E23;font-weight: bold; font-size: 18px;'>• Top 3: </span>{top_3_review}</li>
+                </ul>
+                </details>
+                """, unsafe_allow_html=True)
 
 
         wordcloud = WordCloud(max_words=10000, min_font_size=10, height=800, width=1600,
