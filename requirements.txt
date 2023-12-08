@@ -2,3 +2,7 @@ streamlit
 requests
 wordcloud
 matplotlib
+
+gmaps
+googlemaps
+pydeck
